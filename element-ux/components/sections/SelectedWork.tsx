@@ -125,9 +125,7 @@ export function SelectedWork() {
               speed="base"
             >
               {row1.map(project => (
-                <li key={project.id} className="list-none">
-                  <WorkCard {...project} aspectRatio="4/3" />
-                </li>
+                <WorkCard key={project.id} {...project} aspectRatio="4/3" />
               ))}
             </StaggerList>
           )}
@@ -139,12 +137,11 @@ export function SelectedWork() {
               speed="base"
             >
               {row2.map((project, i) => (
-                <li key={project.id} className="list-none">
-                  <WorkCard
-                    {...project}
-                    aspectRatio={i === 0 ? '16/9' : '4/3'}
-                  />
-                </li>
+                <WorkCard
+                  key={project.id}
+                  {...project}
+                  aspectRatio={i === 0 ? '16/9' : '4/3'}
+                />
               ))}
             </StaggerList>
           )}

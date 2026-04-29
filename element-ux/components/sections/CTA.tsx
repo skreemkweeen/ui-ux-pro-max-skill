@@ -158,19 +158,21 @@ export function CTA() {
               className="text-h2"
               style={{ color: 'var(--fg-primary)' }}
             >
-              Let's build something
+              You have a problem.
               <br />
-              worth remembering.
+              <span style={{ color: 'var(--fg-secondary)', fontStyle: 'italic' }}>
+                I solve it with design.
+              </span>
             </h2>
             <p
               className="text-lead mx-auto"
               style={{
                 color:    'var(--fg-secondary)',
-                maxWidth: '42ch',
+                maxWidth: '40ch',
               }}
             >
-              Available from Q2 2025. Tell me about your project and
-              I'll get back to you within 24 hours.
+              Available from Q2 2025 — tell me what you're building
+              and I'll tell you if I'm the right person for it.
             </p>
           </div>
         </FadeIn>

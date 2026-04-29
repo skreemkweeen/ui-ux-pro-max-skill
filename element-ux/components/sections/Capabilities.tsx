@@ -49,64 +49,72 @@ interface CapabilityCardProps {
 }
 
 function CapabilityCard({ title, description, tags }: CapabilityCardProps) {
+  // Stagger wrapper — isolated so hover variants don't collide with stagger state
   return (
-    <motion.div
-      variants={staggerChild.fadeUp}
-      className="group flex flex-col gap-5 rounded-xl p-6 transition-colors"
-      style={{
-        backgroundColor: 'var(--depth-2)',
-        border:          '1px solid var(--border-subtle)',
-        backgroundImage: 'var(--glow-card)',
-        transition:      `border-color var(--dur-micro) var(--ease-ui),
-                          background-color var(--dur-micro) var(--ease-ui)`,
-      }}
-      whileHover={{
-        y: -4,
-        transition: { duration: DURATION.fast, ease: EASE.ui },
-      }}
-      onHoverStart={e => {
-        ;(e.target as HTMLElement)
-          .closest('[data-capability]')
-          ?.setAttribute('style',
-            'border-color: var(--border-strong); background-color: var(--depth-3)'
-          )
-      }}
-    >
-      <div data-capability className="flex flex-col gap-3">
-        <h3
-          className="text-h3"
-          style={{ color: 'var(--fg-primary)' }}
-        >
-          {title}
-        </h3>
-        <p
-          className="text-body"
-          style={{
-            color:     'var(--fg-secondary)',
-            maxWidth:  '32ch',
-            lineHeight: '1.6',
+    <motion.div variants={staggerChild.fadeUp}>
+      <motion.div
+        className="relative flex flex-col gap-5 overflow-hidden rounded-xl p-6"
+        style={{
+          backgroundColor: 'var(--depth-2)',
+          backgroundImage: 'var(--glow-card)',
+          border:          '1px solid var(--border-subtle)',
+        }}
+        initial="rest"
+        whileHover="hover"
+        animate="rest"
+        variants={{
+          rest:  { y: 0 },
+          hover: { y: -4, transition: { duration: DURATION.fast, ease: EASE.ui } },
+        }}
+      >
+        {/* Border overlay — brightens independently on hover */}
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 rounded-xl"
+          style={{ border: '1px solid transparent' }}
+          variants={{
+            rest:  { borderColor: 'transparent',           backgroundColor: 'transparent' },
+            hover: { borderColor: 'var(--border-strong)',  backgroundColor: 'rgba(255,255,255,0.015)',
+                     transition: { duration: DURATION.micro } },
           }}
-        >
-          {description}
-        </p>
-      </div>
+        />
 
-      {/* Tags */}
-      <div className="flex flex-wrap gap-2">
-        {tags.map(tag => (
-          <span
-            key={tag}
-            className="text-label rounded-full px-3 py-1"
-            style={{
-              color:           'var(--fg-tertiary)',
-              backgroundColor: 'var(--depth-4)',
-              border:          '1px solid var(--border-subtle)',
+        <div className="flex flex-col gap-3">
+          <motion.h3
+            className="text-h3"
+            style={{ color: 'var(--fg-primary)' }}
+            variants={{
+              rest:  { color: 'var(--fg-primary)' },
+              hover: { color: 'var(--fg-primary)', transition: { duration: 0 } },
             }}
           >
-            {tag}
-          </span>
-        ))}
-      </div>
+            {title}
+          </motion.h3>
+          <p
+            className="text-body"
+            style={{ color: 'var(--fg-secondary)', maxWidth: '32ch', lineHeight: '1.6' }}
+          >
+            {description}
+          </p>
+        </div>
+
+        {/* Tags */}
+        <div className="flex flex-wrap gap-2">
+          {tags.map(tag => (
+            <span
+              key={tag}
+              className="text-label rounded-full px-3 py-1"
+              style={{
+                color:           'var(--fg-tertiary)',
+                backgroundColor: 'var(--depth-4)',
+                border:          '1px solid var(--border-subtle)',
+              }}
+            >
+              {tag}
+            </span>
+          ))}
+        </div>
+      </motion.div>
     </motion.div>
   )
 }
