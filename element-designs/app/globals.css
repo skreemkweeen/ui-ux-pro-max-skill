@@ -1,0 +1,74 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-inter: 'Inter', sans-serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+html,
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+  background: #000;
+  color: #fff;
+}
+
+/* ─── Grain overlay ─────────────────────────────── */
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 100;
+  overflow: hidden;
+}
+
+.grain::before {
+  content: '';
+  position: absolute;
+  inset: -100%;
+  width: 300%;
+  height: 300%;
+  background-image: url('/noise.svg');
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  opacity: 0.05;
+  animation: grain 0.35s steps(1) infinite;
+}
+
+/* ─── GSAP line-reveal wrapper ───────────────────── */
+.line-clip {
+  display: block;
+  overflow: hidden;
+  /* Extra bottom padding prevents descender clipping */
+  padding-bottom: 0.08em;
+}
+
+/* ─── Custom cursor ──────────────────────────────── */
+@media (pointer: fine) {
+  body { cursor: none; }
+
+  a, button { cursor: none; }
+}
+
+/* ─── Reduced motion ─────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .grain::before {
+    animation: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
