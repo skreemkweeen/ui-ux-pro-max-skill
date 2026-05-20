@@ -4,8 +4,11 @@ import React, { useRef, useMemo } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import useBreathingArchitecture, { useAnomalySystem } from '@hooks/useBreathingArchitecture'
+import useHeroInteraction from '@hooks/useHeroInteraction'
+import useHeroScroll from '@hooks/useHeroScroll'
 import LightingSetup from '@components/scenes/LightingSetup'
 import AtmosphericLayers from '@components/scenes/AtmosphericLayers'
+import CathedralRipple from '@components/effects/CathedralRipple'
 
 export interface CathedralSceneProps {
   colorScheme?: 'luxury' | 'minimal' | 'ethereal'
@@ -124,6 +127,8 @@ export const CathedralScene: React.FC<CathedralSceneProps> = ({
   const { camera } = useThree()
   const breathing = useBreathingArchitecture(enableBreathing)
   const anomaly = useAnomalySystem(enableAnomalies)
+  const { interaction, isRippleActive } = useHeroInteraction(true)
+  const { scrollProgress } = useHeroScroll(true)
 
   // Apply breathing to camera
   useFrame(() => {
@@ -178,6 +183,15 @@ export const CathedralScene: React.FC<CathedralSceneProps> = ({
           emissiveIntensity={0.02}
         />
       </mesh>
+
+      {/* Ripple Effect on Interaction */}
+      {isRippleActive && interaction && (
+        <CathedralRipple
+          position={interaction.worldPosition}
+          strength={interaction.strength}
+          isActive={true}
+        />
+      )}
 
       {/* Anomaly effect overlay (visual feedback) */}
       {anomaly.isActive && (

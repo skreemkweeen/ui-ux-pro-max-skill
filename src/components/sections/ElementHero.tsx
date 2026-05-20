@@ -8,6 +8,7 @@ import CathedralScene from '@components/immersive/CathedralScene'
 import useLoaderStore from '@hooks/useLoaderStore'
 import useResponsiveWebGL from '@hooks/useResponsiveWebGL'
 import usePerformanceMonitor from '@hooks/usePerformanceMonitor'
+import useHeroScroll from '@hooks/useHeroScroll'
 import gsap from 'gsap'
 
 export interface ElementHeroProps {
@@ -35,6 +36,29 @@ export const ElementHero = ({
   const { performance } = usePerformanceMonitor()
 
   const [showCathedral, setShowCathedral] = useState(false)
+  const [scrollProgress, setScrollProgress] = useState(0)
+
+  // Track scroll for text fade
+  useEffect(() => {
+    const handleScroll = () => {
+      const maxScroll = window.innerHeight * 0.75
+      const progress = Math.min(1, window.scrollY / maxScroll)
+      setScrollProgress(progress)
+
+      // Update text opacity
+      if (heroTextRef.current) {
+        const opacity = Math.max(0, 1 - progress * 1.5)
+        gsap.to(heroTextRef.current, {
+          opacity,
+          duration: 0.1,
+          overwrite: 'auto',
+        })
+      }
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   // Simulate asset loading
   useEffect(() => {
