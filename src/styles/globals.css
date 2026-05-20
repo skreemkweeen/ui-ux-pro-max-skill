@@ -1,0 +1,241 @@
+/* ELEMENT UX - Global Styles */
+
+:root {
+  /* Colors */
+  --color-primary: #0a0a0a;
+  --color-secondary: #1a1a1a;
+  --color-accent: #d4af37;
+  --color-accent-light: #e5e4e2;
+
+  --text-primary: #ffffff;
+  --text-secondary: #d4d4d4;
+  --text-tertiary: #a8a8a8;
+
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #1a1a1a;
+  --bg-overlay: rgba(10, 10, 10, 0.8);
+
+  --border-light: rgba(168, 168, 168, 0.1);
+  --border-default: rgba(168, 168, 168, 0.2);
+  --border-strong: rgba(168, 168, 168, 0.4);
+
+  --shadow-light: rgba(0, 0, 0, 0.2);
+  --shadow-medium: rgba(0, 0, 0, 0.4);
+  --shadow-strong: rgba(0, 0, 0, 0.6);
+
+  --atmosphere-light: rgba(255, 255, 255, 0.05);
+  --atmosphere-medium: rgba(255, 255, 255, 0.1);
+  --atmosphere-strong: rgba(255, 255, 255, 0.15);
+
+  /* Typography */
+  --font-serif: 'Playfair Display', serif;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Spacing */
+  --space-xs: 4px;
+  --space-sm: 8px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-2xl: 48px;
+  --space-3xl: 64px;
+
+  /* Motion */
+  --duration-fast: 0.2s;
+  --duration-normal: 0.4s;
+  --duration-slow: 0.6s;
+  --duration-very-slow: 1s;
+
+  --ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ease-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-luxury: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* Z-index scale */
+  --z-behind: -1;
+  --z-base: 0;
+  --z-below: 1;
+  --z-content: 10;
+  --z-overlay: 100;
+  --z-modal: 1000;
+  --z-tooltip: 1100;
+}
+
+/* === RESET === */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* === TYPOGRAPHY === */
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: clamp(2rem, 8vw, 5rem);
+}
+
+h2 {
+  font-size: clamp(1.5rem, 5vw, 3rem);
+}
+
+h3 {
+  font-size: clamp(1.25rem, 4vw, 2rem);
+}
+
+p {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+}
+
+/* === INTERACTIVE ELEMENTS === */
+a {
+  color: var(--color-accent);
+  text-decoration: none;
+  transition: color var(--duration-normal) var(--ease-out);
+
+  &:hover {
+    color: var(--color-accent-light);
+  }
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all var(--duration-normal) var(--ease-out);
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+input,
+textarea,
+select {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  padding: var(--space-md);
+  font-family: inherit;
+  transition: border-color var(--duration-normal) var(--ease-out);
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+  }
+
+  &::placeholder {
+    color: var(--text-tertiary);
+  }
+}
+
+/* === CANVAS STYLES === */
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* === UTILITY CLASSES === */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 var(--space-lg);
+}
+
+.hidden {
+  display: none !important;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* === ATMOSPHERIC EFFECTS === */
+.atmosphere-blur {
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.glow-accent {
+  box-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
+}
+
+.glow-strong {
+  box-shadow: 0 0 60px rgba(212, 175, 55, 0.5);
+}
+
+/* === RESPONSIVE UTILITIES === */
+@media (max-width: 768px) {
+  html {
+    font-size: 14px;
+  }
+
+  body {
+    padding-bottom: 80px; /* Account for mobile bottom bar */
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* === PRINT STYLES === */
+@media print {
+  body {
+    background: white;
+    color: black;
+  }
+
+  a {
+    text-decoration: underline;
+  }
+}
