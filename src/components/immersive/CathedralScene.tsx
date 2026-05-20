@@ -5,6 +5,8 @@ import { useFrame, useThree } from '@react-three/fiber'
 import * as THREE from 'three'
 import useBreathingArchitecture, { useAnomalySystem } from '@hooks/useBreathingArchitecture'
 import useHeroInteraction from '@hooks/useHeroInteraction'
+import useDepthParadox from '@hooks/useDepthParadox'
+import useAudioSoftening from '@hooks/useAudioSoftening'
 import LightingSetup from '@components/scenes/LightingSetup'
 
 export interface CathedralSceneProps {
@@ -117,9 +119,15 @@ export const CathedralScene: React.FC<CathedralSceneProps> = ({
   const breathing = useBreathingArchitecture(enableBreathing)
   const anomaly = useAnomalySystem(enableAnomalies)
   const presence = useHeroInteraction(true)
+  const paradox = useDepthParadox(enableBreathing)
+  const { applySoftening } = useAudioSoftening(enableBreathing)
 
   // Presence modulates rim light position — user shapes the space
   const rimLightRef = useRef<THREE.PointLight>(null)
+
+  // Depth paradox target — left monolith slab
+  const leftSlabRef = useRef<THREE.Mesh>(null)
+  const paradoxTriggeredRef = useRef(false)
 
   // Drift camera on breathing cycle + presence lean
   useFrame(() => {
@@ -131,11 +139,31 @@ export const CathedralScene: React.FC<CathedralSceneProps> = ({
     camera.position.x += (presence.lightOffsetX * 0.012 - camera.position.x * 0.003)
     camera.position.y += (presence.lightOffsetY * 0.006 - (camera.position.y - 5) * 0.002)
 
+    // Depth paradox: micro-camera compensation during impossible moment
+    camera.position.z += paradox.cameraCompensation * 0.015
+
     // Rim light follows presence
     if (rimLightRef.current) {
       rimLightRef.current.position.x += ((-10 + presence.lightOffsetX * 4) - rimLightRef.current.position.x) * 0.04
       rimLightRef.current.position.y += ((5 + presence.lightOffsetY * 2) - rimLightRef.current.position.y) * 0.04
       rimLightRef.current.intensity = 0.28 + presence.presence * 0.14
+    }
+
+    // Apply depth paradox effects to left slab
+    if (paradox.isActive && paradox.targetSlab === 'left' && leftSlabRef.current) {
+      // Drift deeper than perspective allows
+      leftSlabRef.current.position.z -= paradox.depth * 0.4
+
+      // Shadow lag: offset geometry slightly (creates disagreement)
+      leftSlabRef.current.position.z -= paradox.shadowLag * 0.05
+
+      // Trigger audio softening on first frame of paradox activation
+      if (!paradoxTriggeredRef.current) {
+        paradoxTriggeredRef.current = true
+        applySoftening()
+      }
+    } else {
+      paradoxTriggeredRef.current = false
     }
   })
 
@@ -186,12 +214,23 @@ export const CathedralScene: React.FC<CathedralSceneProps> = ({
       */}
 
       {/* Left vertical mass — wide slab receding into fog */}
-      <MonolithSlab
+      <mesh
+        ref={leftSlabRef}
         position={[-9, 6 * anomalyScale, -12]}
         scale={[2.2, 28, 3.5]}
         rotation={[0, 0.06, 0]}
-        emissive={0.012 + breathing.geometryDistortion * 2}
-      />
+        castShadow
+        receiveShadow
+      >
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial
+          color="#0d0d0d"
+          metalness={0.06}
+          roughness={0.92}
+          emissive="#d4af37"
+          emissiveIntensity={0.012 + breathing.geometryDistortion * 2}
+        />
+      </mesh>
 
       {/* Right vertical mass — asymmetric, narrower */}
       <MonolithSlab
